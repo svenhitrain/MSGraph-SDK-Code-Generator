@@ -4,7 +4,7 @@
 <#@ output extension="\\" #>
 <#host.TemplateName = TypeBody(c);#>
 <#=writer.WriteHeader()#>
-<#=CreatePackageDef(host)#>
+<#=CreatePackageDefForExtensibleMethodBody(host)#>
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.*;

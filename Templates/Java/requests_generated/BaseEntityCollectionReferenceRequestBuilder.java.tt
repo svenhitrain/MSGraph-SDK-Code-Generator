@@ -4,7 +4,7 @@
 <#@ output extension="\\" #>
 <#host.TemplateName = BaseTypeCollectionReferenceRequestBuilder(c);#>
 <#=writer.WriteHeader()#>
-<#=CreatePackageDef(host)#>
+<#=CreatePackageDefForEntityCollectionReferenceRequestBuilder(host)#>
 
 <#=CreateClassDef(BaseTypeCollectionReferenceRequestBuilder(c), "BaseRequestBuilder", IBaseTypeCollectionReferenceRequestBuilder(c))#>
 

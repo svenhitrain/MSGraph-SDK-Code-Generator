@@ -507,6 +507,60 @@
         return "<" + BaseTypeCollectionResponse(c) + ", " + ITypeCollectionPage(c) + ">";
     }
 	
+	public string CreatePackageDefForExtensibleEntity(CustomT4Host host)
+    {
+		var sb = new StringBuilder();
+		var packageFormat = @"package {0}.{1};";
+		sb.AppendFormat(packageFormat,
+						host.CurrentModel.NamespaceName(),
+						host.TemplateInfo.OutputParentDirectory.Replace("_", "."));
+		sb.Append("\n\n");
+		
+		var format = @"import {0}.{1}.{2};";
+		sb.AppendFormat(format,
+						host.CurrentModel.NamespaceName(),
+						"models.generated",
+						BaseTypeName(host.CurrentType));
+		sb.Append("\n");
+		return sb.ToString();
+    }
+
+	public string CreatePackageDefForExtensibleClient(CustomT4Host host)
+    {
+		var sb = new StringBuilder();
+		var packageFormat = @"package {0}.{1};";
+		sb.AppendFormat(packageFormat,
+						host.CurrentModel.NamespaceName(),
+						host.TemplateInfo.OutputParentDirectory.Replace("_", "."));
+		sb.Append("\n\n");
+		
+		var format = @"import {0}.{1}.{2};";
+		sb.AppendFormat(format,
+						host.CurrentModel.NamespaceName(),
+						"models.generated",
+						IBaseClientType(host.CurrentType));
+		sb.Append("\n");
+		return sb.ToString();
+    }
+
+	public string CreatePackageDefForExtensibleMethodBody(CustomT4Host host)
+    {
+		var sb = new StringBuilder();
+		var packageFormat = @"package {0}.{1};";
+		sb.AppendFormat(packageFormat,
+						host.CurrentModel.NamespaceName(),
+						host.TemplateInfo.OutputParentDirectory.Replace("_", "."));
+		sb.Append("\n\n");
+		
+		var format = @"import {0}.{1}.{2};";
+		sb.AppendFormat(format,
+						host.CurrentModel.NamespaceName(),
+						"models.generated",
+						BaseTypeBody(host.CurrentType));
+		sb.Append("\n");
+		return sb.ToString();
+    }
+	
 	public string CreatePackageDefForEnum(CustomT4Host host)
     {
 		var sb = new StringBuilder();
@@ -550,6 +604,89 @@
 			return "models.generated";
 		
 		return getPrefixForModels(propertyType);	
+	}
+	
+		public string CreatePackageDefForEntityCollectionReferenceRequestBuilder(CustomT4Host host)
+	{
+		var sb = new StringBuilder();
+		var packageFormat = @"package {0}.{1};";
+		sb.AppendFormat(packageFormat,
+						host.CurrentModel.NamespaceName(),
+						host.TemplateInfo.OutputParentDirectory.Replace("_", "."));
+		sb.Append("\n");	
+		
+		sb.AppendFormat(@"import {0}.concurrency.*;
+import {0}.core.*;
+import {0}.http.*;
+import {0}.options.*;
+import {0}.serializer.*;
+import java.util.Arrays;
+import java.util.EnumSet;", host.CurrentModel.NamespaceName());
+	
+		sb.Append("\n");	
+		var format = @"import {0}.{1}.{2};";
+		var c = host.CurrentType;
+		
+		sb.AppendFormat(format,
+						host.CurrentModel.NamespaceName(),
+						"requests.extensions",
+						TypeCollectionReferenceRequest(c));
+		sb.Append("\n");
+		
+		sb.AppendFormat(format,
+						host.CurrentModel.NamespaceName(),
+						"requests.extensions",
+						ITypeCollectionReferenceRequest(c));
+		sb.Append("\n");
+		
+		return sb.ToString();
+	}
+	
+	public string CreatePackageDefForEntityCollectionPage(CustomT4Host host)
+	{
+		var sb = new StringBuilder();
+		var packageFormat = @"package {0}.{1};";
+		sb.AppendFormat(packageFormat,
+						host.CurrentModel.NamespaceName(),
+						host.TemplateInfo.OutputParentDirectory.Replace("_", "."));
+		sb.Append("\n");
+		
+		sb.AppendFormat(@"import {0}.concurrency.*;
+import {0}.core.*;
+import {0}.http.*;
+import {0}.options.*;
+import {0}.serializer.*;
+import java.util.Arrays;
+import java.util.EnumSet;", host.CurrentModel.NamespaceName());
+
+		sb.Append("\n");
+		
+		var format = @"import {0}.{1}.{2};";
+		var c = host.CurrentType;
+		
+		if (c is OdcmMethod) {
+			sb.AppendFormat(format,
+						host.CurrentModel.NamespaceName(),
+						"models.extensions",
+						OdcmMethodReturnType(c as OdcmMethod));
+			sb.Append("\n");
+        }
+		else
+		{
+			sb.AppendFormat(format,
+						host.CurrentModel.NamespaceName(),
+						"models.extensions",
+						TypeName(c));
+			sb.Append("\n");
+		}
+		
+		sb.AppendFormat(format,
+						host.CurrentModel.NamespaceName(),
+						"requests.extensions",
+						ITypeCollectionRequestBuilder(c));
+		sb.Append("\n");
+		
+        return sb.ToString();
 	}
 	
 	public string CreatePackageDefForEntity(CustomT4Host host)
