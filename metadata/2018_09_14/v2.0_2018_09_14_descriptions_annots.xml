@@ -14834,7 +14834,7 @@
       <Term Name="sourceUrl" Type="Edm.String" AppliesTo="microsoft.graph.driveItem">
         <Annotation Term="Org.OData.Core.V1.LongDescription" String="When issuing a PUT request, this instance annotation can be used to instruct the service to download the contents of the URL, and store it as the file. Write-only." />
       </Term>
-       <Annotations Target="microsoft.graph.directoryObject">
+      <Annotations Target="microsoft.graph.directoryObject">
   <Annotation Term="Org.OData.Capabilities.V1.ExpandRestrictions">
     <Record>
       <PropertyValue Property="Expandable" Bool="false" />
