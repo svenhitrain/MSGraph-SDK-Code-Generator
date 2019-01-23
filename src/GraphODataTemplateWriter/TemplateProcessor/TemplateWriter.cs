@@ -45,7 +45,7 @@ namespace Microsoft.Graph.ODataTemplateWriter.TemplateProcessor
             }
         }
 
-        IEnumerable<TextFile> ProcessTemplates()
+        IEnumerable<TextFile> ProcessTemplates(string endpoint)
         {
             // There is no need to process "shared" tempaltes, they are only meant to be imported from other templates.
             var templates = this.TemplateInfoProvider.Templates().Where(templateInfo => templateInfo.TemplateType != Template.Shared);
@@ -108,11 +108,11 @@ namespace Microsoft.Graph.ODataTemplateWriter.TemplateProcessor
         }
 
         // IOdcmWriter
-        public IEnumerable<TextFile> GenerateProxy(OdcmModel model)
+        public IEnumerable<TextFile> GenerateProxy(OdcmModel model, string endpoint)
         {
             this.CurrentModel = model;
             logger.Debug("Currently processing model {0}", model);
-            return this.ProcessTemplates();
+            return this.ProcessTemplates(endpoint);
         }
     }
 }
