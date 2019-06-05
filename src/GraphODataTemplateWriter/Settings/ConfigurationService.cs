@@ -17,13 +17,10 @@ namespace Microsoft.Graph.ODataTemplateWriter.Settings
         private static IConfigurationProvider _configurationProvider;
         private static TemplateWriterSettings templateWriterSettings = null;
         private static string targetLanguage = null;
-        private static string endpointVersion = null;
         private static Dictionary<string, string> properties = null;
 
-        public static void Initialize(IConfigurationProvider configurationProvider, string targetLanguage = null, IEnumerable<string> properties = null, string endpointVersion = "v1.0")
+        public static void Initialize(IConfigurationProvider configurationProvider, string targetLanguage = null, IEnumerable<string> properties = null)
         {
-            ConfigurationService.endpointVersion = endpointVersion;
-
             _configurationProvider = configurationProvider;
             if (!String.IsNullOrEmpty(targetLanguage))
             {
@@ -61,7 +58,6 @@ namespace Microsoft.Graph.ODataTemplateWriter.Settings
                 mainTWS.Properties = properties;
             }
 
-            mainTWS.DefaultBaseEndpointUrl = String.Format("https://graph.microsoft.com/{0}", endpointVersion);
 
             TemplateWriterSettings.mainSettingsObject = mainTWS;
             

@@ -10,16 +10,16 @@
     var enumTypes               = model.GetEnumTypes();
     var complexTypes            = model.GetComplexTypes();
 #>
-// Type definitions for the Microsoft Graph <VERSION_STRING>
+// Type definitions for the Microsoft Graph API
 // Project: https://github.com/microsoftgraph/msgraph-typescript-typings
 // Definitions by: Microsoft Graph Team <https://github.com/microsoftgraph>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 2.1
+
+<#= writer.WriteHeader() #>
 
 export as namespace microsoftgraph;
 
 <# foreach(var enumType in enumTypes) { #>
-export type <#= enumType.Name.UpperCaseFirstChar() #> = <#= enumType.GetEnumValues() #>;
+export type <#= enumType.Name.UpperCaseFirstChar() #> = <#= enumType.GetEnumValues() #>
 <# } #>
 <#
   foreach(var entityType in entityTypes)
@@ -28,11 +28,13 @@ export type <#= enumType.Name.UpperCaseFirstChar() #> = <#= enumType.GetEnumValu
 #>
 
 export interface <#= entityType.Name.UpperCaseFirstChar() #><# if (entityType.Base != null) { #> extends <#=  entityType.Base.Name.UpperCaseFirstChar() #><# }#> {
+
 <# foreach(var prop in entityType.Properties.ToList()) { #>
 	<# if (prop.LongDescription != null || prop.Description != null) { #>
     /** <#=prop.GetSanitizedLongDescription()#> */
 	<# } #>
-	<#=  prop.Name #>?: <#= prop.GetTypeString() #>;
+	<#=  prop.Name #>?: <#= prop.GetTypeString() #>
+
 <# } #>
 }
 <#
@@ -43,11 +45,13 @@ export interface <#= entityType.Name.UpperCaseFirstChar() #><# if (entityType.Ba
   {
 #>
 export interface <#= complexType.Name.UpperCaseFirstChar()#><# if (complexType.Base != null) { #> extends <#=  complexType.Base.Name.UpperCaseFirstChar() #><# }#> {
+
 <# foreach(var prop in complexType.Properties) { #>
 	<# if (prop.LongDescription != null || prop.Description != null) { #>
     /** <#=prop.GetSanitizedLongDescription()#> */
 	<# } #>
-	<#= prop.Name #>?: <#= prop.GetTypeString() #>;
+	<#= prop.Name #>?: <#= prop.GetTypeString() #>
+
 <# } #>
 }
 <# } #>
