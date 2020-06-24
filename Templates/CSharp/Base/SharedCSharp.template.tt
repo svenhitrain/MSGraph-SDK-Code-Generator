@@ -15,8 +15,6 @@ bool logTemplateSrc = true;
 
 <# if (logTemplateSrc) { #>
 // Template Source: <#= TemplateName(host.TemplateFile) #>
-<# } #><# if (model.Namespaces.Count > 2) { #>
-<#=this.GetUsingStatements(model)#>
 <# } #>
 <#+
 
@@ -35,15 +33,6 @@ public string TemplateName(string templateFile) {
 public string GetNamespaceName(OdcmClass odcmClass)
 {
     return odcmClass.Namespace.GetNamespaceName();
-}
-
-public string GetUsingStatements(OdcmModel model)
-{
-    var filtered = model.Namespaces
-        .Where(x => !x.Name.Equals("Edm", StringComparison.InvariantCultureIgnoreCase))
-        .Select(x => string.Format("using {0};", x.GetNamespaceName()));
-
-    return string.Join(Environment.NewLine, filtered).Trim();
 }
 
 public string GetEntityNameString(OdcmClass entityClass)
@@ -203,6 +192,11 @@ public string GetPropertyWithReferencesName(OdcmProperty odcmProperty)
 public string GetPropertyTypeName(OdcmProperty odcmProperty)
 {
     return odcmProperty.Projection.Type.Name.ToCheckedCase();
+}
+
+public string GetPropertyTypeName(OdcmProperty odcmProperty, string namespaceContext)
+{
+    return odcmProperty.GetTypeString(namespaceContext);
 }
 
 public string GetPropertyReferenceTypeName(OdcmProperty odcmProperty)
