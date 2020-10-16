@@ -326,6 +326,52 @@ namespace Microsoft.Graph.ODataTemplateWriter.Extensions
             }
         }
 
+        /// <summary>
+        /// Indicates whether the entity's base type is referenced as the type of another property.
+        /// TODO: remove filters on "resource" and "isSharedMethod" once we have annotation support.
+        /// </summary>
+        /// <param name="odcmClass">The OdcmClass to inspect.</param>
+        /// <returns>A value of true indicates that OdcmClass's base type is referenced as the type
+        /// of another property in a different entity or complex type.</returns>
+        public static bool IsBaseReferencedAsPropertyType(this OdcmClass odcmClass)
+        {
+            if (odcmClass.Base == null)
+            {
+                return false;
+            }
+            else
+            {
+                return odcmClass.Namespace.Types.Select(someType => someType)
+                                                 .Where(someType => someType is OdcmClass)
+                                                 .Where(someType => (someType as OdcmClass).Properties
+                                                    .Any(x => x.Type.Name == odcmClass.Base.Name && 
+                                                                   x.Name != "resource" && 
+                                                                   x.Name != "lastSharedMethod"))
+                                                    .Any();
+            }
+        }
+
+        /// <summary>
+        /// Indicates whether any type in the entity's or complexType's base type chain is referenced 
+        /// by any property in any other entity or complex type. This method recursively inspects
+        /// the base type chain for any instance of the base type that is referenced by any other 
+        /// type.
+        /// </summary>
+        /// <param name="entityOrComplexType">The OdcmClass to inspect.</param>
+        /// <returns>A value of true indicates that the base type is referenced; other, false.</returns>
+        public static bool IsBaseTypeReferenced(this OdcmClass entityOrComplexType)
+        {
+            if (entityOrComplexType.Base != null)
+            {
+                if (entityOrComplexType.IsBaseReferencedAsPropertyType())
+                {
+                    return true;
+                }
+                IsBaseTypeReferenced(entityOrComplexType.Base);
+            }
+            return false;
+        }
+
         public static IEnumerable<OdcmProperty> NavigationProperties(this OdcmClass odcmClass, bool includeBaseProperties = false)
         {
             if (includeBaseProperties && odcmClass.Base != null)
