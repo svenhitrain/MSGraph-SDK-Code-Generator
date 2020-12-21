@@ -3,6 +3,8 @@
 Write-Host "Running Typewriter to clean the metadata..."
 Push-Location -Path $env:TypewriterDirectory
 
+& chmod +x $env:TypewriterExecutable
+
 # Note: I think we are only inserting the v1.0 docs. Need to verify.
 & $env:TypewriterExecutable -v Info -m $env:InputMetadataFile -o $env:OutputPath -g $env:GenerationMode -t $env:Transform -d $env:DocsDirectory
 
