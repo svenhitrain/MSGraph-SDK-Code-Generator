@@ -72,6 +72,7 @@ variables:
   buildConfiguration: 'Release'
   cleanMetadataFileBeta: '$(Build.SourcesDirectory)/msgraph-metadata/clean_beta_metadata/cleanMetadataWithDescriptionsbeta.xml'
   cleanMetadataFileV1: '$(Build.SourcesDirectory)/msgraph-metadata/clean_v10_metadata/cleanMetadataWithDescriptionsv1.0.xml'
+  cleanMetadataFileV1OutputPath: '$(Build.SourcesDirectory)/msgraph-metadata/clean_v10_metadata/'
   # rawMetadataFileBeta: '$(Build.SourcesDirectory)/msgraph-metadata/beta_metadata.xml'
   # rawMetadataFileV1: '$(Build.SourcesDirectory)/msgraph-metadata/v1.0_metadata.xml'
   rawMetadataFileBeta: 'https://graph.microsoft.com/beta/$metadata'
@@ -107,7 +108,7 @@ stages:
       parameters:
         endpoint: 'v1.0'
         inputMetadata: $(rawMetadataFileV1)
-        outputPath: $(cleanMetadataFileV1)
+        outputPath: $(cleanMetadataFileV1OutputPath)
     - pwsh: |
         Write-Host "Success!"
 
