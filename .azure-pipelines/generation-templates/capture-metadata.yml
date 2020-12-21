@@ -46,9 +46,9 @@ steps:
     targetBranch: 'master'
   enabled: false
 
-- pwsh: |
-    & chmod +w $env:cleanMetadataFileV1
-  displayName: 'Make the clean metadata file writeable'
+# - pwsh: |
+#     & chmod +w $env:cleanMetadataFileV1
+#   displayName: 'Make the clean metadata file writeable'
 
 # Only run if the previous step was successful
 - pwsh: '$(scriptsDirectory)/run-typewriter-clean-metadata.ps1'

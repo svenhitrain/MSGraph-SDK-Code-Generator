@@ -5,6 +5,8 @@ Push-Location -Path $env:TypewriterDirectory
 
 & chmod +x $env:TypewriterExecutable
 
+Write-Host "Typewriter.exe: $env:TypewriterExecutable `nInput metadata: $env:InputMetadataFile `n output path: $env:OutputPath"
+
 # Note: I think we are only inserting the v1.0 docs. Need to verify.
 & $env:TypewriterExecutable -v Info -m $env:InputMetadataFile -o $env:OutputPath -g $env:GenerationMode -t $env:Transform -d $env:DocsDirectory
 
