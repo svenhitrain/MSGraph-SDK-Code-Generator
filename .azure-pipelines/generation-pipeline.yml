@@ -72,8 +72,10 @@ variables:
   buildConfiguration: 'Release'
   cleanMetadataFileBeta: '$(Build.SourcesDirectory)/msgraph-metadata/clean_beta_metadata/cleanMetadataWithDescriptionsbeta.xml'
   cleanMetadataFileV1: '$(Build.SourcesDirectory)/msgraph-metadata/clean_v10_metadata/cleanMetadataWithDescriptionsv1.0.xml'
-  rawMetadataFileBeta: '$(Build.SourcesDirectory)/msgraph-metadata/beta_metadata.xml'
-  rawMetadataFileV1: '$(Build.SourcesDirectory)/msgraph-metadata/v1.0_metadata.xml'
+  # rawMetadataFileBeta: '$(Build.SourcesDirectory)/msgraph-metadata/beta_metadata.xml'
+  # rawMetadataFileV1: '$(Build.SourcesDirectory)/msgraph-metadata/v1.0_metadata.xml'
+  rawMetadataFileBeta: 'https://graph.microsoft.com/beta/$metadata'
+  rawMetadataFileV1: 'https://graph.microsoft.com/v1.0/$metadata' # We want to run against the metadata we have captured.
   typewriterDirectory: '$(Build.SourcesDirectory)/typewriter'
   typewriterExecutable: '$(typewriterDirectory)/Typewriter'
   scriptsDirectory: '$(Build.SourcesDirectory)/MSGraph-SDK-Code-Generator/scripts'
