@@ -20,13 +20,19 @@ parameters:
 
 steps:
 
+# We only need the scripts
+- checkout: self
+  displayName: checkout generator
+  fetchDepth: 1
+  persistCredentials: true
+
 - template: checkout-metadata.yml
 - template: set-user-config.yml
 - template: download-typewriter.yml
 
 # Results in a raw metadata file written to microsoftgraph/msgraph-metadata if there are changes.
 # An error will cancel this step if there are no changes.
-- pwsh: '$(Build.SourcesDirectory)/MSGraph-SDK-Code-Generator/scripts/download-diff-metadata.ps1'
+- pwsh: '$(scriptsDirectory)/download-diff-metadata.ps1'
   # workingDirectory: 'msgraph-metadata'
   displayName: 'Diff and publish ${{ parameters.endpoint }} metadata'
   env:
@@ -36,7 +42,7 @@ steps:
   enabled: false
 
 # Only run if the previous step was successful
-- pwsh: '$(Build.SourcesDirectory)/MSGraph-SDK-Code-Generator/scripts/run-typewriter-clean-metadata.ps1'
+- pwsh: '$(scriptsDirectory)/scripts/run-typewriter-clean-metadata.ps1'
   env:
     OutputPath: ${{ parameters.outputPath }}
     InputMetadataFile: ${{ parameters.inputMetadata }}
