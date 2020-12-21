@@ -1,0 +1,51 @@
+# Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
+# contains an end to end validation pipeline using C# compilation tests for staging beta metadata
+
+# capture-metadata.yml will result in the capture and cleaning of the metadata 
+# with the artifacts posted to GitHub.
+
+parameters:
+- name: 'endpoint'
+  type: string 
+  default: "v1.0"
+- name: 'inputMetadata'
+  type: string 
+  default: $(rawMetadataFileV1)
+- name: 'outputPath'
+  type: string
+  default: $(System.ArtifactsDirectory)
+# - name: 'errorOnNoChange'
+#   type: boolean # going from YAML to pwsh with Boolean wasnt' successful.
+#   default: true
+
+steps:
+
+- template: checkout-metadata.yml
+- template: set-user-config.yml
+- template: download-typewriter.yml
+
+# Results in a raw metadata file written to microsoftgraph/msgraph-metadata if there are changes.
+# An error will cancel this step if there are no changes.
+- pwsh: '$(Build.SourcesDirectory)/MSGraph-SDK-Code-Generator/scripts/download-diff-metadata.ps1'
+  # workingDirectory: 'msgraph-metadata'
+  displayName: 'Diff and publish ${{ parameters.endpoint }} metadata'
+  env:
+    errorOnNoChange: 1
+    endpointVersion: ${{ parameters.endpoint }}
+    targetBranch: 'master'
+  enabled: false
+
+# Only run if the previous step was successful
+- pwsh: '$(Build.SourcesDirectory)/MSGraph-SDK-Code-Generator/scripts/run-typewriter-clean-metadata.ps1'
+  env:
+    OutputPath: ${{ parameters.outputPath }}
+    InputMetadataFile: ${{ parameters.inputMetadata }}
+    TypewriterExecutable: $(typewriterExecutable)
+    TypewriterDirectory: $(typewriterDirectory)
+    DocsDirectory: $(docsDirectory)
+    GenerationMode: 'TransformWithDocs'
+    Transform: $(transformScript)
+  displayName: 'Run Typewriter to clean ${{ parameters.endpoint }} metadata'
+
+# TODO: Smoke test validate with generation and build of .NET library for both endpoints.
+# TODO: Checkin clean metadata into metadata repo. 

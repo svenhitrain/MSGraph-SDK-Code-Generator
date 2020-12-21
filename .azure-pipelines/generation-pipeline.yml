@@ -68,6 +68,8 @@ variables:
   buildConfiguration: 'Release'
   cleanMetadataFileBeta: '$(Build.SourcesDirectory)/msgraph-metadata/clean_beta_metadata/cleanMetadataWithDescriptionsbeta.xml'
   cleanMetadataFileV1: '$(Build.SourcesDirectory)/msgraph-metadata/clean_v10_metadata/cleanMetadataWithDescriptionsv1.0.xml'
+  rawMetadataFileBeta: '$(Build.SourcesDirectory)/msgraph-metadata/beta_metadata.xml'
+  rawMetadataFileV1: '$(Build.SourcesDirectory)/msgraph-metadata/v1.0_metadata.xml'
   typewriterDirectory: '$(Build.SourcesDirectory)/typewriter'
   typewriterExecutable: '$(typewriterDirectory)/Typewriter'
   scriptsDirectory: '$(Build.SourcesDirectory)/MSGraph-SDK-Code-Generator/scripts'
@@ -93,7 +95,11 @@ stages:
   jobs:
   - job: v1_metadata
     steps:
-    - template: generation-templates/checkout-metadata.yml
+    - template: generation-templates/capture-metadata.yml
+      parameters:
+        endpoint: 'v1.0'
+        inputMetadata: $(rawMetadataFileV1)
+        outputPath: $(cleanMetadataFileV1)
     - pwsh: |
         Write-Host "Success!"
 
