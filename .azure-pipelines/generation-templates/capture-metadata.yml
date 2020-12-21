@@ -42,7 +42,7 @@ steps:
   enabled: false
 
 # Only run if the previous step was successful
-- pwsh: '$(scriptsDirectory)/scripts/run-typewriter-clean-metadata.ps1'
+- pwsh: '$(scriptsDirectory)/run-typewriter-clean-metadata.ps1'
   env:
     OutputPath: ${{ parameters.outputPath }}
     InputMetadataFile: ${{ parameters.inputMetadata }}
