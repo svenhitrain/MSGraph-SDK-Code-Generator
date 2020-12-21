@@ -26,6 +26,11 @@ steps:
   fetchDepth: 1
   persistCredentials: true
 
+- checkout: microsoft-graph-docs
+  displayName: checkout graph docs
+  fetchDepth: 1
+  persistCredentials: true
+
 - template: checkout-metadata.yml
 - template: set-user-config.yml
 - template: download-typewriter.yml
@@ -54,4 +59,9 @@ steps:
   displayName: 'Run Typewriter to clean ${{ parameters.endpoint }} metadata'
 
 # TODO: Smoke test validate with generation and build of .NET library for both endpoints.
+# Checkout dotnet v1.0
+# run typewriter to generate models with the output put into the repo
+# build the repo and trun the tests.
+
+
 # TODO: Checkin clean metadata into metadata repo. 
