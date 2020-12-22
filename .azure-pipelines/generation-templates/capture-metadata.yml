@@ -57,7 +57,7 @@ steps:
     InputMetadataFile: ${{ parameters.inputMetadata }}
     TypewriterExecutable: $(typewriterExecutable)
     TypewriterDirectory: $(typewriterDirectory)
-    DocsDirectory: $(docsDirectory)
+    DocsDirectory: $(docsDirectoryV1)
     GenerationMode: 'TransformWithDocs'
     Transform: $(transformScript)
   displayName: 'Run Typewriter to clean ${{ parameters.endpoint }} metadata'
