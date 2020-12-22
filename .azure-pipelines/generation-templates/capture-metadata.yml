@@ -14,10 +14,10 @@ parameters:
 - name: 'outputPath'
   type: string
   default: $(System.ArtifactsDirectory)
-# - name: 'errorOnNoChange'
-#   type: boolean # going from YAML to pwsh with Boolean wasnt' successful.
-#   default: true
-
+- name: 'docsDirectory'
+  type: string
+  default: $(docsDirectoryV1)
+  
 steps:
 
 # We only need the scripts
@@ -33,7 +33,6 @@ steps:
 
 - template: checkout-metadata.yml
 - template: set-user-config.yml
-- template: download-typewriter.yml
 
 # Results in a raw metadata file written to microsoftgraph/msgraph-metadata if there are changes.
 # An error will cancel this step if there are no changes.
@@ -46,26 +45,48 @@ steps:
     targetBranch: 'master'
   enabled: false
 
-# - pwsh: |
-#     & chmod +w $env:cleanMetadataFileV1
-#   displayName: 'Make the clean metadata file writeable'
+- template: download-typewriter.yml
 
-# Only run if the previous step was successful
+## Only run if the previous step was successful
 - pwsh: '$(scriptsDirectory)/run-typewriter-clean-metadata.ps1'
   env:
     OutputPath: ${{ parameters.outputPath }}
     InputMetadataFile: ${{ parameters.inputMetadata }}
     TypewriterExecutable: $(typewriterExecutable)
     TypewriterDirectory: $(typewriterDirectory)
-    DocsDirectory: $(docsDirectoryV1)
+    DocsDirectory: ${{ parameters.docsDirectory }}
     GenerationMode: 'TransformWithDocs'
     Transform: $(transformScript)
   displayName: 'Run Typewriter to clean ${{ parameters.endpoint }} metadata'
 
-# TODO: Smoke test validate with generation and build of .NET library for both endpoints.
-# Checkout dotnet v1.0
-# run typewriter to generate models with the output put into the repo
-# build the repo and trun the tests.
+# Use the clean metadata from the last step to generate DotNet files.
 
+- template: use-dotnet-sdk.yml
+
+- pwsh: '$(scriptsDirectory)/run-typewriter.ps1'
+  env:
+    BuildConfiguration: $(buildConfiguration)
+    OutputPath: output
+    CleanMetadataFile: $(cleanMetadataFileV1)
+    TypewriterExecutable: $(typewriterExecutable)
+    TypewriterDirectory: $(typewriterDirectory)
+    Language: 'CSharp'
+    Endpoint:  ${{ parameters.endpoint }}
+  displayName: 'Generate ${{ parameters.endpoint }} files for .NET'
+
+- pwsh: '$(scriptsDirectory)/copy-dotnet-models.ps1'
+  displayName: 'Update models .NET models'
+  env:
+    BuildConfiguration: $(buildConfiguration)
+    OutputFullPath: $(typewriterDirectory)/output
+    RepoModelsDir: $(Build.SourcesDirectory)/msgraph-sdk-dotnet/src/Microsoft.Graph/Generated/
+
+# Smoke test that the generated files build for .NET
+- task: DotNetCoreCLI@2
+  displayName: Build Microsoft.Graph.dll
+  inputs:
+    command: 'build'
+    projects: msgraph-sdk-dotnet/**/*.csproj
+    arguments: '--configuration $(buildConfiguration)'
 
 # TODO: Checkin clean metadata into metadata repo. 

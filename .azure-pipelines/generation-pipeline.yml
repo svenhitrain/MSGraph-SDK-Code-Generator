@@ -109,6 +109,7 @@ stages:
         endpoint: 'v1.0'
         inputMetadata: $(rawMetadataFileV1)
         outputPath: $(cleanMetadataFileV1OutputPath)
+        docsDirectory: $(docsDirectoryV1)
     - pwsh: |
         Write-Host "Success!"
 
