@@ -113,5 +113,5 @@ steps:
     # git push --set-upstream origin master | Write-Host
     Write-Host "Pushed the results of the build to the mastere branch." -ForegroundColor Green
     Pop-Location
-  displayname: Push clean ${{ parameters.endpoint }} to msgraph-metadata repo
+  displayName: Push clean ${{ parameters.endpoint }} to msgraph-metadata repo
   enabled: true
