@@ -99,10 +99,6 @@ steps:
     Write-Host "About to add clean metadata file....."
     Push-Location -Path "$(Build.SourcesDirectory)/msgraph-metadata"
 
-    # temp to understand why I'm writing the wrong file name.
-    [array]$result = git status --porcelain
-    Write-Host "results: $result"
-
     git add . | Write-Host
     if ($env:BUILD_REASON -eq 'Manual') # Skip CI if manually running this pipeline.
     {
@@ -116,7 +112,7 @@ steps:
     Write-Host "Added and commited cleaned metadata." -ForegroundColor Green
 
     # git push --set-upstream origin master | Write-Host
-    Write-Host "Pushed the results of the build to the mastere branch." -ForegroundColor Green
+    Write-Host "Pushed the results of the build to the master branch." -ForegroundColor Green
     Pop-Location
   displayName: Push clean ${{ parameters.endpoint }} to msgraph-metadata repo
   enabled: true
