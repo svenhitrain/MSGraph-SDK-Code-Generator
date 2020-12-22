@@ -74,6 +74,11 @@ steps:
     Endpoint:  ${{ parameters.endpoint }}
   displayName: 'Generate ${{ parameters.endpoint }} files for .NET'
 
+- checkout: msgraph-sdk-dotnet
+  displayName: checkout dotnet v1
+  fetchDepth: 1
+  persistCredentials: true
+
 - pwsh: '$(scriptsDirectory)/copy-dotnet-models.ps1'
   displayName: 'Update models .NET models'
   env:
@@ -89,4 +94,4 @@ steps:
     projects: msgraph-sdk-dotnet/**/*.csproj
     arguments: '--configuration $(buildConfiguration)'
 
-# TODO: Checkin clean metadata into metadata repo. 
+# TODO: Checkin clean metadata into metadata repo or make it an artifact.
