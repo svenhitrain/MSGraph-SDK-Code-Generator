@@ -3,7 +3,7 @@
 Write-Host "Running Typewriter to clean the metadata..."
 Push-Location -Path $env:TypewriterDirectory
 
-& chmod +x $env:TypewriterExecutable
+#& chmod +x $env:TypewriterExecutable
 
 Write-Host "Typewriter.exe: $env:TypewriterExecutable `nInput metadata: $env:InputMetadataFile `n output path: $env:OutputPath"
 

@@ -98,6 +98,11 @@ steps:
 - pwsh: |
     Write-Host "About to add clean metadata file....."
     Push-Location -Path "$(Build.SourcesDirectory)/msgraph-metadata"
+
+    # temp to understand why I'm writing the wrong file name.
+    [array]$result = git status --porcelain
+    Write-Host "results: $result"
+
     git add . | Write-Host
     if ($env:BUILD_REASON -eq 'Manual') # Skip CI if manually running this pipeline.
     {
