@@ -94,4 +94,24 @@ steps:
     projects: msgraph-sdk-dotnet/**/*.csproj
     arguments: '--configuration $(buildConfiguration)'
 
-# TODO: Checkin clean metadata into metadata repo or make it an artifact.
+# Checkin clean metadata into metadata repo or make it an artifact.
+- pwsh: |
+    Write-Host "About to add clean metadata file....."
+    Push-Location -Path "$(Build.SourcesDirectory)/msgraph-metadata"
+    git add . | Write-Host
+    if ($env:BUILD_REASON -eq 'Manual') # Skip CI if manually running this pipeline.
+    {
+        git commit -m "Update clean metadata file with $env:BUILD_BUILDID [skip ci]" | Write-Host
+    }
+    else
+    {
+        git commit -m "Update clean metadata file with $env:BUILD_BUILDID" | Write-Host
+    }
+
+    Write-Host "Added and commited cleaned metadata." -ForegroundColor Green
+
+    # git push --set-upstream origin master | Write-Host
+    Write-Host "Pushed the results of the build to the mastere branch." -ForegroundColor Green
+    Pop-Location
+  displayname: Push clean ${{ parameters.endpoint }} to msgraph-metadata repo
+  enabled: true
